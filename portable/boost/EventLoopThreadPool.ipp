@@ -19,7 +19,8 @@ class EventLoopThreadPoolImpl
     {
         for (size_t i = 0; i < threadNum; ++i)
         {
-            threads_.emplace_back(std::make_unique<EventLoopThread>(name));
+            auto thread = std::make_shared<EventLoopThread>(name);
+            threads_.emplace_back(thread);
         }
     }
 
@@ -77,6 +78,10 @@ class EventLoopThreadPoolImpl
 
     void wait()
     {
+        for (auto &thread : threads_)
+        {
+            thread->wait();
+        }
     }
 
   private:

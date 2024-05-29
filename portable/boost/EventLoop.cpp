@@ -4,18 +4,21 @@
 
 #include <drogon/portable/portable.hpp>
 
-#include <boost/asio.hpp>
 #include <utility>
 
 #include "EventLoop.ipp"
 #include "EventLoopThread.ipp"
 #include "EventLoopThreadPool.ipp"
-#include "drogon/portable/EventLoop.hpp"
 
 namespace drogon
 {
 
 namespace asio = boost::asio;
+
+thread_local EventLoop *EventLoop::LocalThreadEventLoop::LocalEventLoop =
+    nullptr;
+
+EventLoop::TimerId EventLoop::InvalidTimerId = nullptr;
 
 EventLoop::~EventLoop()
 {
@@ -54,7 +57,13 @@ bool EventLoop::isInLoopThread()
 
 void EventLoop::moveToCurrentThread()
 {
-    impl_->moveToCurrentThread();
+    if (EventLoop::LocalThreadEventLoop::get())
+    {
+        throw std::runtime_error(
+            "There is already an EventLoop in this thread, you cannot "
+            "move another in");
+    }
+    EventLoop::LocalThreadEventLoop::set(this);
 }
 
 void EventLoop::loop()
@@ -99,7 +108,7 @@ EventLoop::TimerId EventLoop::runEvery(double interval,
     return impl_->runEvery(interval, cb);
 }
 
-void EventLoop::invalidateTimer(EventLoop::TimerId timerId)
+void EventLoop::invalidateTimer(const EventLoop::TimerId &timerId)
 {
     impl_->invalidateTimer(timerId);
 }
@@ -150,11 +159,6 @@ void EventLoopThread::stop()
 void EventLoopThread::wait()
 {
     impl_->wait();
-}
-
-size_t EventLoopThread::getIndex() const
-{
-    return impl_->getIndex();
 }
 
 void EventLoopThread::run()

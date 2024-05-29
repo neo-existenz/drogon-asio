@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 
 project(drogon)
 
-message(STATUS "compiler: " ${CMAKE_CXX_COMPILER_ID})
+message(STATUS "Compiler: " ${CMAKE_CXX_COMPILER_ID})
 
+include(FetchContent)
+include(CMakeDependentOption)
+include(GNUInstallDirs)
+
+# Feature
 option(BUILD_CTL "Build drogon_ctl" ON)
-option(BUILD_EXAMPLES "Build examples" ON)
 option(BUILD_ORM "Build orm" ON)
 option(COZ_PROFILING "Use coz for profiling" OFF)
 option(BUILD_SHARED_LIBS "Build drogon as a shared lib" OFF)
@@ -13,15 +17,17 @@ option(BUILD_DOC "Build Doxygen documentation" OFF)
 option(BUILD_BROTLI "Build Brotli" ON)
 option(BUILD_YAML_CONFIG "Build yaml config" ON)
 
-include(FetchContent)
+# Example
+option(BUILD_EXAMPLES "Build examples" ON)
 
-include(CMakeDependentOption)
+# ORM
 CMAKE_DEPENDENT_OPTION(BUILD_POSTGRESQL "Build with postgresql support" ON "BUILD_ORM" OFF)
 CMAKE_DEPENDENT_OPTION(LIBPQ_BATCH_MODE "Use batch mode for libpq" ON "BUILD_POSTGRESQL" OFF)
 CMAKE_DEPENDENT_OPTION(BUILD_MYSQL "Build with mysql support" ON "BUILD_ORM" OFF)
 CMAKE_DEPENDENT_OPTION(BUILD_SQLITE "Build with sqlite3 support" ON "BUILD_ORM" OFF)
 CMAKE_DEPENDENT_OPTION(BUILD_REDIS "Build with redis support" ON "BUILD_ORM" OFF)
 
+# Version
 set(DROGON_MAJOR_VERSION 1)
 set(DROGON_MINOR_VERSION 8)
 set(DROGON_PATCH_VERSION 4)
@@ -29,7 +35,6 @@ set(DROGON_VERSION
         ${DROGON_MAJOR_VERSION}.${DROGON_MINOR_VERSION}.${DROGON_PATCH_VERSION})
 set(DROGON_VERSION_STRING "${DROGON_VERSION}")
 
-include(GNUInstallDirs)
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE PATH "Installation directory for libraries")
 set(INSTALL_BIN_DIR ${CMAKE_INSTALL_BINDIR} CACHE PATH "Installation directory for executables")
@@ -37,14 +42,6 @@ set(INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "Installation dir
 set(DEF_INSTALL_DROGON_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/Drogon)
 set(INSTALL_DROGON_CMAKE_DIR ${DEF_INSTALL_DROGON_CMAKE_DIR}
         CACHE PATH "Installation directory for cmake files")
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    # Force MSVC to use UTF-8 because that's what we use. Otherwise it uses
-    # the default of whatever Windows sets and causes encoding issues.
-    message(STATUS "You are using MSVC. Forceing to use UTF-8")
-    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-endif ()
 
 add_library(${PROJECT_NAME})
 if (BUILD_SHARED_LIBS)
@@ -526,6 +523,12 @@ else (DROGON_CXX_STANDARD EQUAL 20)
     option(USE_COROUTINE "Enable C++20 coroutine support" OFF)
 endif (DROGON_CXX_STANDARD EQUAL 20)
 
+find_package(OpenSSL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS log log_setup)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::log Boost::log_setup)
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenSSL::Crypto OpenSSL::SSL)
+
 if (BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif (BUILD_EXAMPLES)
@@ -543,8 +546,6 @@ if (COZ_PROFILING)
     # target_link_libraries(${PROJECT_NAME} PUBLIC coz::coz)
     target_include_directories(${PROJECT_NAME} PUBLIC ${COZ_INCLUDE_DIRS})
 endif (COZ_PROFILING)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE crypto ssl)
 
 set(DROGON_SOURCES
         ${DROGON_SOURCES}

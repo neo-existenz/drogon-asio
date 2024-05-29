@@ -19,10 +19,10 @@ class EventLoopThreadPoolImpl;
 class EventLoop
 {
   public:
-    using TimerId = uint64_t;
+    using TimerId = std::shared_ptr<void>;
     using Func = std::function<void()>;
 
-    static constexpr TimerId InvalidTimerId = 0;
+    static TimerId InvalidTimerId;
 
     virtual ~EventLoop();
 
@@ -56,7 +56,7 @@ class EventLoop
 
     TimerId runEvery(double interval, const Func &cb);
 
-    void invalidateTimer(TimerId timerId);
+    void invalidateTimer(const TimerId& timerId);
 
     void runOnQuit(const Func &cb);
 
@@ -83,23 +83,24 @@ class EventLoop
         }
     }
 
-    static EventLoop **LocalThreadEventLoop()
+    struct LocalThreadEventLoop
     {
-        static thread_local EventLoop *localEventLoop;
-        return &localEventLoop;
-    }
+        static thread_local EventLoop *LocalEventLoop;
+
+        static EventLoop *get()
+        {
+            return LocalEventLoop;
+        }
+
+        static void set(EventLoop *loop)
+        {
+            LocalEventLoop = loop;
+        }
+    };
 
     static EventLoop *getEventLoopOfCurrentThread()
     {
-        return *LocalThreadEventLoop();
-    }
-
-    static void abortNotInLoopThread()
-    {
-        LOG_FATAL
-            << "It is forbidden to run loop on threads other than event-loop "
-               "thread";
-        exit(1);
+        return drogon::EventLoop::LocalThreadEventLoop::get();
     }
 
     [[nodiscard]] EventLoopImpl *getImpl() const
@@ -127,8 +128,6 @@ class EventLoopThread
     void wait();
 
     void run();
-
-    [[nodiscard]] size_t getIndex() const;
 
   protected:
     EventLoopThreadImpl *impl_;

@@ -125,17 +125,17 @@ int HttpFileImpl::saveTo(const filesystem::path &pathAndFileName) const noexcept
 
 std::string HttpFileImpl::getMd5() const noexcept
 {
-    return utils::getMd5(fileContent_.data(), fileContent_.size());
+    return drogon::utils::hash::getMd5(fileContent_.data(), fileContent_.size());
 }
 
 std::string HttpFileImpl::getSha256() const noexcept
 {
-    return utils::getSha256(fileContent_.data(), fileContent_.size());
+    return drogon::utils::hash::getSha256(fileContent_.data(), fileContent_.size());
 }
 
 std::string HttpFileImpl::getSha3() const noexcept
 {
-    return utils::getSha3(fileContent_.data(), fileContent_.size());
+    return drogon::utils::hash::getSha3(fileContent_.data(), fileContent_.size());
 }
 
 const std::string &HttpFile::getFileName() const noexcept

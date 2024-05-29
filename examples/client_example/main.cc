@@ -14,7 +14,6 @@ int nth_resp = 0;
 
 int main()
 {
-    trantor::Logger::setLogLevel(trantor::Logger::kTrace);
     {
         auto client = HttpClient::newHttpClient("http://www.baidu.com");
         client->setSockOptCallback([](int fd) {

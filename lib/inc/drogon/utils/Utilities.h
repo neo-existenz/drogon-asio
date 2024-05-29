@@ -170,10 +170,9 @@ DROGON_EXPORT std::string urlEncode(const std::string &);
 DROGON_EXPORT std::string urlEncodeComponent(const std::string &);
 
 /// Get the MD5 digest of a string.
-DROGON_EXPORT std::string getMd5(const char *data, const size_t dataLen);
 inline std::string getMd5(const std::string &originalString)
 {
-    return getMd5(originalString.data(), originalString.length());
+    return drogon::utils::hash::getMd5(originalString.data(), originalString.length());
 }
 
 DROGON_EXPORT std::string getSha1(const char *data, const size_t dataLen);
@@ -263,7 +262,7 @@ DROGON_EXPORT int createPath(const std::string &path);
  */
 inline std::string fromWidePath(const std::wstring &strPath)
 {
-    return utils::fromWidePath(strPath);
+    return text::fromWidePath(strPath);
 }
 
 /**
@@ -287,7 +286,7 @@ inline std::string fromWidePath(const std::wstring &strPath)
  */
 inline std::wstring toWidePath(const std::string &strUtf8Path)
 {
-    return utils::toWidePath(strUtf8Path);
+    return text::toWidePath(strUtf8Path);
 }
 
 /**
@@ -316,11 +315,11 @@ inline const std::wstring &toNativePath(const std::wstring &strPath)
 #else   // __WIN32
 inline const std::string &toNativePath(const std::string &strPath)
 {
-    return utils::toNativePath(strPath);
+    return text::toNativePath(strPath);
 }
 inline std::string toNativePath(const std::wstring &strPath)
 {
-    return utils::toNativePath(strPath);
+    return text::toNativePath(strPath);
 }
 #endif  // _WIN32
 /**

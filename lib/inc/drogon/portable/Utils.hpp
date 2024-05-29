@@ -28,6 +28,18 @@ struct Hash256
 struct text
 {
     static std::string toHexString(const uint8_t *data, std::size_t dataLen);
+
+    static std::string toUtf8(const std::wstring &wstr);
+
+    static std::wstring fromUtf8(const std::string &str);
+
+    static std::string fromWidePath(const std::wstring &path);
+
+    static std::wstring toWidePath(const std::string &path);
+
+    static const std::string &toNativePath(const std::string &path);
+
+    static std::string toNativePath(const std::wstring &path);
 };
 
 struct hash
@@ -42,6 +54,9 @@ struct hash
 
     static std::string getSha1(const char *data, size_t dataLen);
 
+    static std::string getSha256(const char *data, size_t dataLen);
+
+    static std::string getSha3(const char *data, size_t dataLen);
     //    static std::string getSha256(const char *data, const size_t dataLen)
     //    {
     //    }

@@ -5,7 +5,6 @@ int main()
 {
     app()
         .setLogPath("./")
-        .setLogLevel(trantor::Logger::kWarn)
         .addListener("0.0.0.0", 7770)
         .setThreadNum(0)
         .registerSyncAdvice([](const HttpRequestPtr &req) -> HttpResponsePtr {

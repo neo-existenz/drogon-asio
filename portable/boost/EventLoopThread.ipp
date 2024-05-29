@@ -14,8 +14,14 @@ class EventLoopThreadImpl
 {
   public:
     explicit EventLoopThreadImpl(std::string threadName = "EventLoopThread")
-        : eventLoop_(nullptr), loopThreadName_(std::move(threadName))
+        : loopThreadName_(std::move(threadName))
     {
+        eventLoop_ = std::make_shared<EventLoop>();
+    }
+
+    ~EventLoopThreadImpl()
+    {
+        stop();
     }
 
     EventLoop *getLoop()
@@ -25,8 +31,7 @@ class EventLoopThreadImpl
 
     void start()
     {
-        thread_ = std::thread(
-            [this] { eventLoop_->getImpl()->getIoContext().run(); });
+        thread_ = std::thread([this] { run(); });
     }
 
     void run()
@@ -36,7 +41,7 @@ class EventLoopThreadImpl
 
     void stop()
     {
-        eventLoop_->getImpl()->getIoContext().stop();
+        eventLoop_->quit();
         if (thread_.joinable())
         {
             thread_.join();
@@ -45,11 +50,7 @@ class EventLoopThreadImpl
 
     void wait()
     {
-    }
-
-    [[nodiscard]] size_t getIndex() const
-    {
-        return index_;
+        thread_.join();
     }
 
   private:
@@ -59,6 +60,6 @@ class EventLoopThreadImpl
     size_t index_{};
 };
 
-}
+}  // namespace drogon
 
 #endif  // DROGON_EVENTLOOPTHREAD_IPP

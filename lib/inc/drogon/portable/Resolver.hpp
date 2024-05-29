@@ -44,7 +44,7 @@ class Resolver
 
     static std::shared_ptr<Resolver> newResolver()
     {
-        return std::make_shared<Resolver>(*EventLoop::LocalThreadEventLoop());
+        return std::make_shared<Resolver>(EventLoop::getEventLoopOfCurrentThread());
     }
 
   protected:

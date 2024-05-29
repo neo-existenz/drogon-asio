@@ -100,6 +100,10 @@ class Date
         strftime(buf, size, fmt.data(), &tm);
     }
 
+    [[nodiscard]] TimePoint timePoint() const
+    {
+        return timePoint_;
+    }
   private:
     TimePoint timePoint_;
 };
