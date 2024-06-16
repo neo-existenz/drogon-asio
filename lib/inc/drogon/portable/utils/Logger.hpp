@@ -5,7 +5,7 @@
 #ifndef DROGON_LOGGER_HPP
 #define DROGON_LOGGER_HPP
 
-#include <drogon/portable/pch.hpp>
+#include <drogon/portable/Common.hpp>
 
 #include <boost/log/trivial.hpp>
 

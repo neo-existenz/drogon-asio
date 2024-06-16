@@ -5,7 +5,7 @@
 #ifndef DROGON_EVENTLOOPTHREAD_IPP
 #define DROGON_EVENTLOOPTHREAD_IPP
 
-#include <drogon/portable/portable.hpp>
+#include <drogon/portable/Portable.hpp>
 
 namespace drogon
 {

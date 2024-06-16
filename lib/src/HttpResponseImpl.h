@@ -19,10 +19,7 @@
 #include <drogon/exports.h>
 #include <drogon/HttpResponse.h>
 #include <drogon/utils/Utilities.h>
-#include <drogon/portable/InetAddress.hpp>
-#include <drogon/portable/MsgBuffer.hpp>
-#include <drogon/portable/Date.hpp>
-#include <drogon/portable/Certificate.hpp>
+#include <drogon/portable/Portable.hpp>
 #include <memory>
 #include <mutex>
 #include <string>

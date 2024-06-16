@@ -5,7 +5,7 @@
 #ifndef DROGON_SSLCONTEXT_HPP
 #define DROGON_SSLCONTEXT_HPP
 
-#include <drogon/portable/pch.hpp>
+#include <drogon/portable/Common.hpp>
 
 namespace drogon
 {

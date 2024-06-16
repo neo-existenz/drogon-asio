@@ -13,9 +13,7 @@
  */
 
 #include <drogon/utils/Utilities.h>
-#include <drogon/portable/Date.hpp>
-#include <drogon/portable/Logger.hpp>
-#include <drogon/portable/Utils.hpp>
+#include <drogon/portable/Portable.hpp>
 #include "filesystem.h"
 #include <drogon/config.h>
 #ifdef USE_BROTLI

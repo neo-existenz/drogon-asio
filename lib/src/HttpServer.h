@@ -17,17 +17,14 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include <drogon/portable/TcpServer.hpp>
-#include <drogon/portable/MsgBuffer.hpp>
-#include <drogon/portable/TLSPolicy.hpp>
-#include <boost/noncopyable.hpp>
+#include <drogon/portable/Portable.hpp>
 #include "ListenerManager.h"
 #include "impl_forwards.h"
 
 struct CallbackParamPack;
 namespace drogon
 {
-class HttpServer : boost::noncopyable
+class HttpServer : private NonCopyable
 {
   public:
     HttpServer(EventLoop *loop,

@@ -5,7 +5,7 @@
 #ifndef DROGON_TLSPOLICY_HPP
 #define DROGON_TLSPOLICY_HPP
 
-#include <drogon/portable/pch.hpp>
+#include <drogon/portable/Common.hpp>
 
 namespace drogon
 {

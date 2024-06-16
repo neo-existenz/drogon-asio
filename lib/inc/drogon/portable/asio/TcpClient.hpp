@@ -5,12 +5,12 @@
 #ifndef DROGON_TCPCLIENT_HPP
 #define DROGON_TCPCLIENT_HPP
 
-#include <drogon/portable/pch.hpp>
-#include <drogon/portable/InetAddress.hpp>
-#include <drogon/portable/EventLoop.hpp>
-#include <drogon/portable/TLSPolicy.hpp>
-#include <drogon/portable/SSLContext.hpp>
-#include <drogon/portable/NonCopyable.hpp>
+#include <drogon/portable/Common.hpp>
+#include <drogon/portable/lang/NonCopyable.hpp>
+#include <drogon/portable/asio/InetAddress.hpp>
+#include <drogon/portable/asio/EventLoop.hpp>
+#include <drogon/portable/asio/TLSPolicy.hpp>
+#include <drogon/portable/asio/SSLContext.hpp>
 
 namespace drogon {
 

@@ -5,7 +5,7 @@
 #ifndef DROGON_CERTIFICATE_HPP
 #define DROGON_CERTIFICATE_HPP
 
-#include <drogon/portable/pch.hpp>
+#include <drogon/portable/Common.hpp>
 
 namespace drogon {
 

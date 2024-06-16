@@ -5,12 +5,12 @@
 #ifndef DROGON_TCPSERVER_HPP
 #define DROGON_TCPSERVER_HPP
 
-#include <drogon/portable/pch.hpp>
-#include <drogon/portable/Connection.hpp>
-#include <drogon/portable/EventLoop.hpp>
-#include <drogon/portable/InetAddress.hpp>
-#include <drogon/portable/MsgBuffer.hpp>
-#include <drogon/portable/TLSPolicy.hpp>
+#include <drogon/portable/Common.hpp>
+#include <drogon/portable/asio/Connection.hpp>
+#include <drogon/portable/asio/EventLoop.hpp>
+#include <drogon/portable/asio/InetAddress.hpp>
+#include <drogon/portable/asio/MsgBuffer.hpp>
+#include <drogon/portable/asio/TLSPolicy.hpp>
 
 namespace drogon
 {

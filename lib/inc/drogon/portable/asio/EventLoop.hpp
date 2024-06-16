@@ -1,13 +1,9 @@
-//
-// Created by neo on 5/3/24.
-//
 
 #ifndef DROGON_EVENTLOOP_H
 #define DROGON_EVENTLOOP_H
 
-#include <drogon/portable/pch.hpp>
-#include <drogon/portable/Date.hpp>
-#include <drogon/portable/Logger.hpp>
+#include <drogon/portable/Common.hpp>
+#include <drogon/portable/Utils.hpp>
 
 namespace drogon
 {
@@ -56,7 +52,7 @@ class EventLoop
 
     TimerId runEvery(double interval, const Func &cb);
 
-    void invalidateTimer(const TimerId& timerId);
+    void invalidateTimer(const TimerId &timerId);
 
     void runOnQuit(const Func &cb);
 

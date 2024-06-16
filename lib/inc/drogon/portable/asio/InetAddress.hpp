@@ -5,7 +5,7 @@
 #ifndef DROGON_INETADDRESS_HPP
 #define DROGON_INETADDRESS_HPP
 
-#include <drogon/portable/pch.hpp>
+#include <drogon/portable/Common.hpp>
 
 #include <sys/socket.h>
 #include <netinet/in.h>

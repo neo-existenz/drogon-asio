@@ -5,7 +5,7 @@
 #ifndef DROGON_RESOLVER_IPP
 #define DROGON_RESOLVER_IPP
 
-#include <drogon/portable/portable.hpp>
+#include <drogon/portable/Portable.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>

@@ -5,9 +5,9 @@
 #ifndef DROGON_RESOLVER_HPP
 #define DROGON_RESOLVER_HPP
 
-#include <drogon/portable/pch.hpp>
-#include <drogon/portable/InetAddress.hpp>
-#include <drogon/portable/EventLoop.hpp>
+#include <drogon/portable/Common.hpp>
+#include <drogon/portable/asio/InetAddress.hpp>
+#include <drogon/portable/asio/EventLoop.hpp>
 
 namespace drogon
 {

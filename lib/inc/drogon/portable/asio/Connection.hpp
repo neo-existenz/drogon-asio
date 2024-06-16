@@ -5,12 +5,12 @@
 #ifndef DROGON_CONNECTION_HPP
 #define DROGON_CONNECTION_HPP
 
-#include <drogon/portable/pch.hpp>
-#include <drogon/portable/MsgBuffer.hpp>
-#include <drogon/portable/Resolver.hpp>
-#include <drogon/portable/EventLoop.hpp>
-#include <drogon/portable/InetAddress.hpp>
-#include <drogon/portable/Certificate.hpp>
+#include <drogon/portable/Common.hpp>
+#include <drogon/portable/asio/MsgBuffer.hpp>
+#include <drogon/portable/asio/Resolver.hpp>
+#include <drogon/portable/asio/EventLoop.hpp>
+#include <drogon/portable/asio/InetAddress.hpp>
+#include <drogon/portable/asio/Certificate.hpp>
 
 namespace drogon
 {

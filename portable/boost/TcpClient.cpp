@@ -2,13 +2,12 @@
 // Created by neo on 5/26/24.
 //
 
-#include <drogon/portable/portable.hpp>
-#include "drogon/portable/TcpClient.hpp"
+#include <drogon/portable/Portable.hpp>
 
 namespace drogon
 {
 
-class TcpClientImpl : NonCopyable
+class TcpClientImpl : private NonCopyable
 {
   public:
     TcpClientImpl(EventLoop *loop,

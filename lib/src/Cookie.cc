@@ -14,7 +14,7 @@
 
 #include <drogon/Cookie.h>
 #include <drogon/utils/Utilities.h>
-#include <drogon/portable/Logger.hpp>
+#include <drogon/portable/Portable.hpp>
 using namespace drogon;
 std::string Cookie::cookieString() const
 {
