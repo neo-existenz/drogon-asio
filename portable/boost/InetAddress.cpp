@@ -4,8 +4,9 @@
 
 #include <drogon/portable/portable.hpp>
 
-#include <netinet/in.h>
+#include <cstring>
 #include <boost/asio.hpp>
+#include "drogon/portable/InetAddress.hpp"
 
 namespace drogon
 {
@@ -20,6 +21,17 @@ class InetAddressImpl
                              bool loopbackOnly = false,
                              bool ipv6 = false)
     {
+        isUnspecified_ = true;
+        ip_ = asio::ip::address_v4::any();
+        port_ = port;
+    }
+
+    InetAddressImpl(const InetAddressImpl &other)
+    {
+        ip_ = other.ip_;
+        port_ = other.port_;
+        isUnspecified_ = other.isUnspecified_;
+        isIntranetIp_ = other.isIntranetIp_;
     }
 
     /**
@@ -31,6 +43,8 @@ class InetAddressImpl
      */
     InetAddressImpl(const std::string &ip, uint16_t port, bool ipv6 = false)
     {
+        ip_ = asio::ip::make_address(ip);
+        port_ = port;
     }
 
     /**
@@ -42,6 +56,8 @@ class InetAddressImpl
     explicit InetAddressImpl(const struct sockaddr_in &addr)
         : isUnspecified_(false)
     {
+        ip_ = asio::ip::make_address_v4(ntohl(addr.sin_addr.s_addr));
+        port_ = ntohs(addr.sin_port);
     }
 
     // Constructs an InetAddress from a given IP address string in the form
@@ -78,7 +94,7 @@ class InetAddressImpl
     }
 
     // Returns the IP address as a string
-    std::string toIpString() const
+    [[nodiscard]] std::string toIpString() const
     {
         return ip_.to_string();
     }
@@ -137,16 +153,18 @@ class InetAddressImpl
 
     [[nodiscard]] const uint32_t *ip6NetEndian() const
     {
+        memcpy((void *)addr6_.sin6_addr.s6_addr,
+               ip_.to_v6().to_bytes().data(),
+               sizeof(addr6_.sin6_addr.s6_addr));
         return addr6_.sin6_addr.s6_addr32;
     }
 
   private:
     asio::ip::address ip_;
-    uint16_t port_{};
-    union
+    struct sockaddr_in6 addr6_
     {
-        struct sockaddr_in6 addr6_;
     };
+    uint16_t port_{};
     bool isUnspecified_{};
     bool isIntranetIp_{};
 };
@@ -172,6 +190,22 @@ InetAddress::InetAddress(const std::string &ipPort)
 {
     impl_ = new InetAddressImpl(ipPort);
 }
+
+InetAddress::InetAddress(const InetAddress &other)
+{
+    impl_ = new InetAddressImpl(*other.impl_);
+}
+
+InetAddress &InetAddress::operator=(const InetAddress &other)
+{
+    if (this != &other)
+    {
+        delete impl_;
+        impl_ = new InetAddressImpl(*other.impl_);
+    }
+    return *this;
+}
+
 bool InetAddress::isUnspecified() const
 {
     return impl_->isUnspecified();

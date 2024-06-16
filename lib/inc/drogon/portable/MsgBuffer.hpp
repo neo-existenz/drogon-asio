@@ -20,7 +20,15 @@ class MsgBuffer
   public:
     explicit MsgBuffer(size_t len = kBufferDefaultLength);
 
-    MsgBuffer(MsgBuffer& msg);
+    MsgBuffer(const MsgBuffer& msg);
+
+    MsgBuffer(MsgBuffer&& other) noexcept
+    {
+        impl_ = other.impl_;
+        other.impl_ = nullptr;
+    }
+
+    MsgBuffer& operator=(MsgBuffer&& other) noexcept;
 
     virtual ~MsgBuffer();
 
@@ -56,7 +64,6 @@ class MsgBuffer
 
     char& operator[](size_t offset);
 
-  protected:
     MsgBufferImpl* impl_;
 };
 

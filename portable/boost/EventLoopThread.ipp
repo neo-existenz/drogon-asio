@@ -31,7 +31,10 @@ class EventLoopThreadImpl
 
     void start()
     {
-        thread_ = std::thread([this] { run(); });
+        thread_ = std::thread([this] {
+            eventLoop_->moveToCurrentThread();
+            run();
+        });
     }
 
     void run()

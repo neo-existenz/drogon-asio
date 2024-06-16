@@ -1,110 +1,121 @@
 //
 // Created by neo on 5/26/24.
 //
-#include <drogon/portable/portable.hpp>
 
 #include "Connection.ipp"
 
-drogon::TcpConnection::~TcpConnection()
+namespace drogon
+{
+
+TcpConnection::~TcpConnection()
 {
     delete impl_;
 }
 
-drogon::TcpConnection::TcpConnection(EventLoop *loop)
+TcpConnection::TcpConnection(EventLoop *loop)
 {
-    impl_ = new TcpConnectionImpl(loop->getImpl());
+    impl_ = new TcpConnectionImpl(loop);
 }
 
-bool drogon::TcpConnection::isSSLConnection() const
+bool TcpConnection::isSSLConnection() const
 {
     return impl_->isSSLConnection();
 }
 
-drogon::EventLoop *drogon::TcpConnection::getLoop()
+EventLoop *TcpConnection::getLoop()
 {
     return impl_->getLoop();
 }
 
-void drogon::TcpConnection::shutdown()
+void TcpConnection::shutdown()
 {
     impl_->shutdown();
 }
 
-bool drogon::TcpConnection::connected()
+bool TcpConnection::connected()
 {
     return impl_->connected();
 }
 
-bool drogon::TcpConnection::disconnected()
+bool TcpConnection::disconnected()
 {
     return impl_->disconnected();
 }
 
-void drogon::TcpConnection::forceClose()
+void TcpConnection::forceClose()
 {
     impl_->forceClose();
 }
 
-drogon::InetAddress drogon::TcpConnection::peerAddr() const
+InetAddress TcpConnection::peerAddr() const
 {
     return impl_->peerAddr();
 }
 
-drogon::InetAddress drogon::TcpConnection::localAddr() const
+InetAddress TcpConnection::localAddr() const
 {
     return impl_->localAddr();
 }
 
-drogon::CertificatePtr drogon::TcpConnection::peerCertificate()
+CertificatePtr TcpConnection::peerCertificate()
 {
     return impl_->peerCertificate();
 }
 
-void drogon::TcpConnection::setContext(const std::shared_ptr<void> &context)
+void TcpConnection::setContext(const std::shared_ptr<void> &context)
 {
+    impl_->setContext(context);
 }
 
-void drogon::TcpConnection::setContext(std::shared_ptr<void> &&context)
+void TcpConnection::setContext(std::shared_ptr<void> &&context)
 {
+    impl_->setContext(std::move(context));
 }
 
-std::shared_ptr<void> drogon::TcpConnection::getContextVoid() const
+std::shared_ptr<void> TcpConnection::getContextVoid() const
 {
-    return std::shared_ptr<void>();
+    return impl_->contextPtr_;
 }
 
-void drogon::TcpConnection::clearContext()
+void TcpConnection::clearContext()
 {
+    impl_->clearContext();
 }
 
-bool drogon::TcpConnection::hasContext() const
+bool TcpConnection::hasContext() const
 {
-    return false;
+    return impl_->hasContext();
 }
 
-void drogon::TcpConnection::sendFile(const char *fileName,
-                                     size_t offset,
-                                     size_t length)
+void TcpConnection::sendFile(const char *fileName, size_t offset, size_t length)
 {
+    impl_->sendFile(fileName, offset, length);
 }
 
-void drogon::TcpConnection::send(const drogon::MsgBuffer &buffer)
+void TcpConnection::send(const MsgBuffer &buffer)
 {
+    impl_->send(buffer);
 }
 
-void drogon::TcpConnection::send(drogon::MsgBuffer &&buffer)
+void TcpConnection::send(MsgBuffer &&buffer)
 {
+    impl_->send(buffer);
 }
 
-void drogon::TcpConnection::send(std::shared_ptr<MsgBuffer> &buffer)
+void TcpConnection::send(std::shared_ptr<MsgBuffer> &buffer)
 {
+    impl_->send(buffer);
 }
 
-void drogon::TcpConnection::send(const std::string &msg)
+void TcpConnection::send(const std::string &msg)
 {
+    impl_->send(msg);
 }
 
-void drogon::TcpConnection::sendStream(
-    std::function<std::size_t(char *, std::size_t)> callback)
+void TcpConnection::sendStream(
+    const std::function<std::size_t(char *, std::size_t)>& callback)
 {
+    impl_->sendStream(callback);
 }
+
+}  // namespace drogon

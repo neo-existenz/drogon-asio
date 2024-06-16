@@ -7,6 +7,9 @@
 
 #include <drogon/portable/pch.hpp>
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 namespace drogon
 {
 
@@ -43,6 +46,26 @@ class InetAddress
     // "ip:port"
     explicit InetAddress(const std::string &ipPort);
 
+    InetAddress(const InetAddress &other);
+
+    InetAddress &operator=(const InetAddress &other);
+
+    InetAddress(InetAddress &&other) noexcept
+    {
+        impl_ = other.impl_;
+        other.impl_ = nullptr;
+    }
+
+    InetAddress &operator=(InetAddress &&other) noexcept
+    {
+        if (this != &other)
+        {
+            impl_ = other.impl_;
+            other.impl_ = nullptr;
+        }
+        return *this;
+    }
+
     [[nodiscard]] bool isUnspecified() const;
 
     [[nodiscard]] bool isIntranetIp() const;
@@ -75,7 +98,6 @@ class InetAddress
 
     [[nodiscard]] const uint32_t *ip6NetEndian() const;
 
-  protected:
     InetAddressImpl *impl_;
 };
 

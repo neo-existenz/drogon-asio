@@ -6,6 +6,7 @@
 #define DROGON_EVENTLOOP_IPP
 
 #include <boost/asio.hpp>
+#include <utility>
 
 namespace drogon
 {
@@ -53,6 +54,9 @@ class EventLoopImpl
 
     void loop()
     {
+        if (ioContext_.stopped()) {
+            ioContext_.restart();
+        }
         ioContext_.run();
         // TODO: run quit function
     }
@@ -153,16 +157,16 @@ class EventLoopImpl
     };
 
   private:
-    void run(const std::shared_ptr<asio::steady_timer> &timer,
+    void run(std::shared_ptr<asio::steady_timer> timer,
              std::chrono::milliseconds duration,
              const EventLoop::Func &cb)
     {
         timer->expires_after(duration);
-        timer->async_wait([&](const std::error_code &ec) {
+        timer->async_wait([timer, duration, callback = cb, this](const std::error_code &ec) {
             if (!ec)
             {
-                cb();
-                run(timer, duration, cb);
+                callback();
+                run(timer, duration, callback);
             }
         });
     }

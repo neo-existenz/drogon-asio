@@ -64,10 +64,6 @@ class HttpServer : boost::noncopyable
     {
         server_.setIoLoopThreadPool(pool);
     }
-    void setIoLoopNum(int numThreads)
-    {
-        server_.setIoLoopNum(numThreads);
-    }
     void setIoLoops(const std::vector<EventLoop *> &ioLoops)
     {
         server_.setIoLoops(ioLoops);

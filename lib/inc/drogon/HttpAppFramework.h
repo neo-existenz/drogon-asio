@@ -1506,7 +1506,7 @@ class DROGON_EXPORT HttpAppFramework : public NonCopyable
         const internal::HttpBinderBasePtr &binder,
         const std::vector<HttpMethod> &validMethods,
         const std::vector<std::string> &filters,
-        const std::string &handlerName) = 0;
+        const std::string &handlerName) = 0;\
 };
 
 /// A wrapper of the instance() method

@@ -1,11 +1,10 @@
-//
-// Created by neo on 5/26/24.
-//
-#include <drogon/portable/portable.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
+#include <drogon/portable/portable.hpp>
+
+#include "Connection.ipp"
 #include "EventLoop.ipp"
 
 namespace drogon
@@ -13,12 +12,8 @@ namespace drogon
 
 class TcpServerImpl : protected EventLoop
 {
-    using RecvMessageCallback =
-        std::function<void(const TcpConnectionPtr&, MsgBuffer*)>;
-
-    using ConnectionCallback = std::function<void(const TcpConnectionPtr&)>;
-
   public:
+    typedef boost::asio::detail::socket_option::boolean<SOL_SOCKET, SO_REUSEPORT> reuse_port;
     /**
      * @brief Construct a new TCP server instance.
      *
@@ -36,16 +31,44 @@ class TcpServerImpl : protected EventLoop
                   bool reUsePort = true)
         : loop_(loop),
           acceptor_(loop->getImpl()->getIoContext()),
+          address_(address),
+          endpoint_(asio::ip::make_address(address.toIpNetEndian()),
+                    address.portNetEndian()),
           name_(std::move(name))
     {
+        acceptor_.open(endpoint_.protocol());
+        acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(reUseAddr));
+        acceptor_.set_option(reuse_port(reUsePort));
+        acceptor_.bind(endpoint_);
+        acceptor_.listen();
     }
 
     void start()
     {
+        auto conn = std::make_shared<TcpConnection>(loop_);
+        acceptor_.async_accept(
+            conn->getImpl()->socket_, [conn, this](std::error_code ec) {
+                if (!ec)
+                {
+                    LOG_INFO << conn->getImpl()->socket_.remote_endpoint();
+                    if (connectionCallback_)
+                    {
+                        connectionCallback_(conn);
+                    }
+                    if (recvMessageCallback_)
+                    {
+                        conn->getImpl()->receive(conn, recvMessageCallback_, connectionCallback_);
+                    }
+                    start();
+                } else {
+                    std::cout << ec.message() << '\n';
+                }
+            });
     }
 
     void stop()
     {
+        acceptor_.close();
     }
 
     [[nodiscard]] const InetAddress& address() const
@@ -85,12 +108,6 @@ class TcpServerImpl : protected EventLoop
         ioLoopThreadPool_ = pool;
     }
 
-    void setIoLoopNum(int numThreads)
-    {
-        // Set the number of I/O loops
-        ioLoopNum_ = numThreads;
-    }
-
     void setIoLoops(const std::vector<EventLoop*>& ioLoops)
     {
         // Set the I/O loops
@@ -117,14 +134,16 @@ class TcpServerImpl : protected EventLoop
 
     std::string name_;
     asio::ip::tcp::acceptor acceptor_;
+    asio::ip::tcp::endpoint endpoint_;
     asio::ssl::context* sslContext_{};
     bool useSSL_ = false;
     TLSPolicyPtr policyPtr_;
     std::shared_ptr<EventLoopThreadPool> ioLoopThreadPool_;
     std::vector<EventLoop*> ioLoops_;
     InetAddress address_;
-    size_t ioLoopNum_{};
     EventLoop* loop_{};
+    TcpServer::ConnectionCallback connectionCallback_;
+    TcpServer::RecvMessageCallback recvMessageCallback_;
 };
 
 TcpServer::TcpServer(EventLoop* loop,
@@ -178,11 +197,6 @@ void TcpServer::setIoLoopThreadPool(
     impl_->setIoLoopThreadPool(pool);
 }
 
-void TcpServer::setIoLoopNum(int numThreads)
-{
-    impl_->setIoLoopNum(numThreads);
-}
-
 void TcpServer::setIoLoops(const std::vector<EventLoop*>& ioLoops)
 {
     impl_->setIoLoops(ioLoops);
@@ -205,18 +219,22 @@ std::vector<EventLoop*> TcpServer::getIoLoops() const
 
 void TcpServer::setConnectionCallback(const TcpServer::ConnectionCallback& cb)
 {
+    impl_->connectionCallback_ = cb;
 }
 
 void TcpServer::setConnectionCallback(TcpServer::ConnectionCallback&& cb)
 {
+    impl_->connectionCallback_ = cb;
 }
 
 void TcpServer::setRecvMessageCallback(const TcpServer::RecvMessageCallback& cb)
 {
+    impl_->recvMessageCallback_ = cb;
 }
 
 void TcpServer::setRecvMessageCallback(TcpServer::RecvMessageCallback&& cb)
 {
+    impl_->recvMessageCallback_ = cb;
 }
 
 }  // namespace drogon

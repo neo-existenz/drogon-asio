@@ -100,7 +100,7 @@ class EventLoop
 
     static EventLoop *getEventLoopOfCurrentThread()
     {
-        return drogon::EventLoop::LocalThreadEventLoop::get();
+        return EventLoop::LocalThreadEventLoop::get();
     }
 
     [[nodiscard]] EventLoopImpl *getImpl() const

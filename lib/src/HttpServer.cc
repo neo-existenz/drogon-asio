@@ -122,7 +122,6 @@ void HttpServer::onConnection(const TcpConnectionPtr &conn)
     }
     else if (conn->disconnected())
     {
-        LOG_TRACE << "conn disconnected!";
         connectionCallback_(conn);
         auto requestParser = conn->getContext<HttpRequestParser>();
         if (requestParser)

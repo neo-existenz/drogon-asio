@@ -79,7 +79,7 @@ class TcpConnection
 
     void send(const std::string &msg);
 
-    void sendStream(std::function<std::size_t(char *, std::size_t)> callback);
+    void sendStream(const std::function<std::size_t(char *, std::size_t)>& callback);
 
     /**
      * @brief Get the custom data from the connection.
@@ -91,6 +91,11 @@ class TcpConnection
     std::shared_ptr<T> getContext() const
     {
         return std::static_pointer_cast<T>(getContextVoid());
+    }
+
+    [[nodiscard]] TcpConnectionImpl *getImpl() const noexcept
+    {
+        return impl_;
     }
 
   protected:

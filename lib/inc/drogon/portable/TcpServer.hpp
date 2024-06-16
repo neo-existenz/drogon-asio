@@ -19,12 +19,12 @@ class TcpServerImpl;
 
 class TcpServer
 {
+  public:
     using RecvMessageCallback =
         std::function<void(const TcpConnectionPtr&, MsgBuffer*)>;
 
     using ConnectionCallback = std::function<void(const TcpConnectionPtr&)>;
 
-  public:
     /**
      * @brief Construct a new TCP server instance.
      *
@@ -60,8 +60,6 @@ class TcpServer
 
     void setIoLoopThreadPool(const std::shared_ptr<EventLoopThreadPool>& pool);
 
-    void setIoLoopNum(int numThreads);
-
     void setIoLoops(const std::vector<EventLoop*>& ioLoops);
 
     void kickoffIdleConnections(size_t timeout);
@@ -71,7 +69,9 @@ class TcpServer
     [[nodiscard]] std::vector<EventLoop*> getIoLoops() const;
 
     void setConnectionCallback(const ConnectionCallback& cb);
+
     void setConnectionCallback(ConnectionCallback&& cb);
+
     void setRecvMessageCallback(const RecvMessageCallback& cb);
 
     void setRecvMessageCallback(RecvMessageCallback&& cb);

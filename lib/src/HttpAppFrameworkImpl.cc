@@ -20,7 +20,6 @@
 #include <drogon/portable/portable.hpp>
 #include <drogon/version.h>
 #include <json/json.h>
-#include <boost/asio.hpp>
 #include <algorithm>
 #include "AOPAdvice.h"
 #include "ConfigLoader.h"
@@ -661,10 +660,10 @@ void HttpAppFrameworkImpl::run()
 void HttpAppFrameworkImpl::onConnection(const TcpConnectionPtr &conn)
 {
     static std::mutex mtx;
-    LOG_TRACE << "connect!!!" << maxConnectionNum_
-              << " num=" << connectionNum_.load();
     if (conn->connected())
     {
+        LOG_TRACE << "connect!!!" << maxConnectionNum_
+                  << " num=" << connectionNum_.load();
         if (connectionNum_.fetch_add(1, std::memory_order_relaxed) >=
             maxConnectionNum_)
         {
@@ -720,6 +719,8 @@ void HttpAppFrameworkImpl::onConnection(const TcpConnectionPtr &conn)
                 }
             }
         }
+        LOG_TRACE << "disconnect!!!" << maxConnectionNum_
+                  << " num=" << connectionNum_.load();
     }
 }
 
@@ -1016,20 +1017,24 @@ orm::DbClientPtr HttpAppFrameworkImpl::getDbClient(const std::string &name)
 {
     return dbClientManagerPtr_->getDbClient(name);
 }
+
 orm::DbClientPtr HttpAppFrameworkImpl::getFastDbClient(const std::string &name)
 {
     return dbClientManagerPtr_->getFastDbClient(name);
 }
+
 nosql::RedisClientPtr HttpAppFrameworkImpl::getRedisClient(
     const std::string &name)
 {
     return redisClientManagerPtr_->getRedisClient(name);
 }
+
 nosql::RedisClientPtr HttpAppFrameworkImpl::getFastRedisClient(
     const std::string &name)
 {
     return redisClientManagerPtr_->getFastRedisClient(name);
 }
+
 HttpAppFramework &HttpAppFrameworkImpl::createDbClient(
     const std::string &dbType,
     const std::string &host,
@@ -1180,6 +1185,7 @@ std::vector<InetAddress> HttpAppFrameworkImpl::getListeners() const
 {
     return listenerManagerPtr_->getListeners();
 }
+
 HttpAppFramework &HttpAppFrameworkImpl::setDefaultHandler(
     DefaultHandler handler)
 {
