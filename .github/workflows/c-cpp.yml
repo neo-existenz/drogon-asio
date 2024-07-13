@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: prepare
+      run: apt install libboost-all-dev
     - name: configure
       run: cmake -B build -S . -DBUILD_CTL:BOOL=ON -DBUILD_ORM:BOOL=OFF -DBUILD_MYSQL:BOOL=OFF -DBUILD_POSTGRESQL:BOOL=OFF -DBUILD_REDIS:BOOL=OFF -DBUILD_SQLITE:BOOL=OFF -DBUILD_YAML_CONFIG:BOOL=OFF -DBUILD_BROTLI:BOOL=OFF
     - name: make
