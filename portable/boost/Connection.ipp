@@ -5,11 +5,12 @@
 #ifndef DROGON_CONNECTION_IPP
 #define DROGON_CONNECTION_IPP
 
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
+#include <drogon/portable/Portable.hpp>
+
 #include <fstream>
 
-#include <drogon/portable/Portable.hpp>
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
 
 #include "EventLoop.ipp"
 #include "Connection.ipp"
@@ -39,8 +40,8 @@ class TcpConnectionImpl : public std::enable_shared_from_this<TcpConnectionImpl>
     void shutdown()
     {
         io_context_.post([this]() {
-            error_code ec;
-            socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+            error_code ec =
+                socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
             if (ec)
             {
                 LOG_ERROR << "Error: " << ec.message();
@@ -330,6 +331,9 @@ class TcpConnectionImpl : public std::enable_shared_from_this<TcpConnectionImpl>
                                                  << ", Buffered: "
                                                  << buffer_.readableBytes()
                                                  << " bytes";
+//                                       char *tmp =
+//                                           const_cast<char *>();
+                                       std::cout << buffer_.peek();
                                        recv_callback_(conn, &buffer_);
                                        buffer_.retrieve(len);
                                        do_receive(conn);
