@@ -21,9 +21,7 @@ void TimeFilter::doFilter(const HttpRequestPtr &req,
     {
         LOG_TRACE << "last:" << lastDate->toFormattedString(false);
         req->session()->modify<Date>(VDate,
-                                              [now](Date &vdate) {
-                                                  vdate = now;
-                                              });
+                                     [now](Date &vdate) { vdate = now; });
         LOG_TRACE << "update visitDate";
         if (now > lastDate->after(10))
         {

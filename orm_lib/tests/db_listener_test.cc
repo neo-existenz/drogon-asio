@@ -82,8 +82,6 @@ DROGON_TEST(ListenNotifyTest)
 
 int main(int argc, char **argv)
 {
-    Logger::setLogLevel(Logger::LogLevel::kDebug);
-
     std::string dbConnInfo;
     const char *dbUrl = std::getenv("DROGON_TEST_DB_CONN_INFO");
     if (dbUrl)

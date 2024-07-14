@@ -538,6 +538,10 @@ class HttpAppFrameworkImpl final : public HttpAppFramework
     {
         return useSendfile_;
     }
+    bool supportSSL() const override
+    {
+        return drogon::utils::tls::tlsBackend() != "None";
+    }
     void callCallback(
         const HttpRequestImplPtr &req,
         const HttpResponsePtr &resp,

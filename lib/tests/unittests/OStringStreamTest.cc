@@ -32,8 +32,8 @@ DROGON_TEST(OStringStreamTest)
     SUBSECTION(string_view)
     {
         drogon::OStringStream ss;
-        ss << drogon::string_view("hello");
-        ss << drogon::string_view(" world");
+        ss << std::string_view("hello");
+        ss << std::string_view(" world");
         CHECK(ss.str() == "hello world");
     }
 
@@ -49,7 +49,7 @@ DROGON_TEST(OStringStreamTest)
     {
         drogon::OStringStream ss;
         ss << std::string("hello");
-        ss << drogon::string_view(" world");
+        ss << std::string_view(" world");
         ss << "!";
         ss << 123;
         ss << 3.14f;

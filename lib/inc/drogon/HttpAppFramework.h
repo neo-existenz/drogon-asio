@@ -1429,6 +1429,8 @@ class DROGON_EXPORT HttpAppFramework : public NonCopyable
      */
     virtual const ResolverPtr &getResolver() const = 0;
 
+    virtual bool supportSSL() const = 0;
+
     /**
      * @brief Get the Current Thread Index whose range is [0, the total number
      * of IO threads]

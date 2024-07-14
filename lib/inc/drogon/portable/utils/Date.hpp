@@ -92,6 +92,26 @@ class Date
         return tm;
     }
 
+    [[nodiscard]] std::string toFormattedString(bool showMicroseconds) const {
+        char buf[64]; // Buffer to hold the formatted string
+        auto tm = toTmStruct(); // Convert to tm struct for formatting
+
+        // Format the date and time without microseconds
+        strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
+
+        std::string formattedString(buf);
+
+        // If microseconds should be shown, append them
+        if (showMicroseconds) {
+            int64_t microseconds = microSecondsSinceEpoch() % MICRO_SECONDS_PRE_SEC;
+            char microBuf[32];
+            snprintf(microBuf, sizeof(microBuf), ".%06ld", microseconds);
+            formattedString += microBuf;
+        }
+
+        return formattedString;
+    }
+
     void toCustomedFormattedString(const std::string &fmt,
                                                  char *buf,
                                                  std::size_t size) const

@@ -219,12 +219,12 @@ class Users
     /**  For column create_time  */
     /// Get the value of the column create_time, returns the default value if
     /// the column is null
-    const Date &getValueOfCreateTime() const noexcept;
+    const drogon::Date &getValueOfCreateTime() const noexcept;
     /// Return a shared_ptr object pointing to the column const value, or an
     /// empty shared_ptr object if the column is null
-    const std::shared_ptr<Date> &getCreateTime() const noexcept;
+    const std::shared_ptr<drogon::Date> &getCreateTime() const noexcept;
     /// Set the value of the column create_time
-    void setCreateTime(const Date &pCreateTime) noexcept;
+    void setCreateTime(const drogon::Date &pCreateTime) noexcept;
     void setCreateTimeToNull() noexcept;
 
     static size_t getColumnNumber() noexcept
@@ -261,7 +261,7 @@ class Users
     std::shared_ptr<std::string> avatarId_;
     std::shared_ptr<std::string> salt_;
     std::shared_ptr<std::string> admin_;
-    std::shared_ptr<Date> createTime_;
+    std::shared_ptr<drogon::Date> createTime_;
     struct MetaData
     {
         const std::string colName_;

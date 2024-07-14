@@ -134,6 +134,10 @@ class MsgBufferImpl : public asio::streambuf
         //        pubsetbuf(nullptr, 0);
     }
 
+    void swap_impl(MsgBufferImpl &buf) noexcept {
+        swap(buf);
+    }
+
     /**
      * @brief Access a byte in the buffer.
      *

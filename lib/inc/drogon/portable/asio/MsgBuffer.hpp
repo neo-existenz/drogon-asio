@@ -44,6 +44,53 @@ class MsgBuffer
 
     [[nodiscard]] const char* peek() const;
 
+    [[nodiscard]] uint8_t peekInt8() const
+    {
+        assert(readableBytes() >= 1);
+        return *(static_cast<const uint8_t *>((void *)peek()));
+    }
+
+    void swap(MsgBuffer &buf) noexcept;
+
+    /**
+     * @brief Put new data to the beginning of the buffer.
+     *
+     * @param buf
+     * @param len
+     */
+    void addInFront(const char *buf, size_t len);
+
+    /**
+     * @brief Put a byte value to the beginning of the buffer.
+     *
+     * @param b
+     */
+    void addInFrontInt8(const uint8_t b)
+    {
+        addInFront(static_cast<const char *>((void *)&b), 1);
+    }
+
+    /**
+     * @brief Put a unsigned short value to the beginning of the buffer.
+     *
+     * @param s
+     */
+    void addInFrontInt16(uint16_t s);
+
+    /**
+     * @brief Put a unsigned int value to the beginning of the buffer.
+     *
+     * @param i
+     */
+    void addInFrontInt32(uint32_t i);
+
+    /**
+     * @brief Put a unsigned int64 value to the beginning of the buffer.
+     *
+     * @param l
+     */
+    void addInFrontInt64(uint64_t l);
+
     void hasWritten(std::size_t len);
 
     void unwrite(int len);

@@ -61,6 +61,38 @@ const char* MsgBuffer::peek() const
 {
     return impl_->peek();
 }
+
+void MsgBuffer::swap(MsgBuffer& buf) noexcept
+{
+    impl_->swap_impl(*buf.impl_);
+}
+
+void MsgBuffer::addInFront(const char* buf, size_t len)
+{
+    MsgBuffer newBuf;
+    newBuf.append(buf, len);
+    newBuf.append(*this);
+    swap(newBuf);
+}
+
+void MsgBuffer::addInFrontInt16(const uint16_t s)
+{
+    uint16_t ss = htons(s);
+    addInFront(static_cast<const char*>((void*)&ss), 2);
+}
+
+void MsgBuffer::addInFrontInt32(const uint32_t i)
+{
+    uint32_t ii = htonl(i);
+    addInFront(static_cast<const char*>((void*)&ii), 4);
+}
+
+void MsgBuffer::addInFrontInt64(const uint64_t l)
+{
+    uint64_t ll = hton64(l);
+    addInFront(static_cast<const char*>((void*)&ll), 8);
+}
+
 void MsgBuffer::hasWritten(std::size_t len)
 {
     impl_->hasWritten(len);
