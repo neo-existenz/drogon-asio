@@ -15,7 +15,7 @@ RedisClientPtr redisClient;
 DROGON_TEST(RedisSubscriberTest)
 {
     redisClient = drogon::nosql::RedisClient::newRedisClient(
-        trantor::InetAddress("127.0.0.1", 6379), 1);
+        drogon::InetAddress("127.0.0.1", 6379), 1);
     REQUIRE(redisClient != nullptr);
 
     auto subscriber = redisClient->newSubscriber();

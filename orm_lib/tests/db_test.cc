@@ -2592,8 +2592,6 @@ DROGON_TEST(SQLite3Test)
 using namespace drogon;
 int main(int argc, char **argv)
 {
-    Logger::setLogLevel(Logger::LogLevel::kDebug);
-
 #if USE_MYSQL
     mysqlClient = DbClient::newMysqlClient(
         "host=localhost port=3306 user=root client_encoding=utf8mb4", 1);

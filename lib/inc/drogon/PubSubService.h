@@ -20,6 +20,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <drogon/portable/Portable.hpp>
 
 namespace drogon
 {

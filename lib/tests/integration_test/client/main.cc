@@ -1222,7 +1222,6 @@ DROGON_TEST(HttpsTimeoutTest)
 
 int main(int argc, char **argv)
 {
-    Logger::setLogLevel(Logger::LogLevel::kDebug);
     loadFileLengths();
 
     std::promise<void> p1;

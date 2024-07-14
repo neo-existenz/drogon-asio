@@ -1,4 +1,5 @@
 #include <drogon/drogon_test.h>
+#include <drogon/portable/Portable.hpp>
 #include <string>
 #include <iostream>
 
@@ -6,7 +7,7 @@ DROGON_TEST(MsgBufferTest)
 {
     SUBSECTION(readableTest)
     {
-        MsgBuffer buffer;
+        drogon::MsgBuffer buffer;
 
         CHECK(buffer.readableBytes() == 0UL);
         buffer.append(std::string(128, 'a'));
@@ -20,7 +21,7 @@ DROGON_TEST(MsgBufferTest)
 
     SUBSECTION(writableTest)
     {
-        MsgBuffer buffer(100);
+        drogon::MsgBuffer buffer(100);
 
         CHECK(buffer.writableBytes() == 100UL);
         buffer.append("abcde");
@@ -37,7 +38,7 @@ DROGON_TEST(MsgBufferTest)
 
     SUBSECTION(addInFrontTest)
     {
-        MsgBuffer buffer(100);
+        drogon::MsgBuffer buffer(100);
 
         CHECK(buffer.writableBytes() == 100UL);
         buffer.addInFrontInt8('a');
@@ -52,10 +53,10 @@ DROGON_TEST(MsgBufferTest)
 
     SUBSECTION(MoveAssignmentOperator)
     {
-        MsgBuffer buf(100);
+        drogon::MsgBuffer buf(100);
         const char *bufptr = buf.peek();
         size_t writable = buf.writableBytes();
-        MsgBuffer buffnew(1000);
+        drogon::MsgBuffer buffnew(1000);
         buffnew = std::move(buf);
         CHECK(bufptr == buffnew.peek());
         CHECK(writable == buffnew.writableBytes());
